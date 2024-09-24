@@ -14,8 +14,9 @@ while (true)
     var client = listener.AcceptTcpClient(); // blocking
     Console.WriteLine("Client accepted: " + client.Client.RemoteEndPoint);
    
-    string currentTime = "This is Marina's server, current time is: " + DateTime.Now;
-   
+   // string currentTime = "This is Marina's server, current time is: " + DateTime.Now;
+   Console.Write("Your message: ");
+   string currentTime = Console.ReadLine();
     byte[] bytes = Encoding.ASCII.GetBytes(currentTime);
   
     client.GetStream().Write(bytes);
