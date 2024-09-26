@@ -11,7 +11,6 @@ using System.Text;
  {
      try
      {
-         string?  phrase = " ";
          List<string> savePhrase = new List<string>();
          
          var remoteEp = new IPEndPoint(IPAddress.Any, 1100); 
@@ -19,13 +18,18 @@ using System.Text;
          Console.WriteLine("Message received from " + remoteEp);
          var receiveData = Encoding.UTF8.GetString(data);
 
-         if (receiveData.Length <= 20)
+         var typeMessage = Console.ReadLine();
+
+         if (typeMessage != null && receiveData.Length <= 20)
          {
-             var typeMessage = Console.ReadLine();
-             Console.WriteLine("Numbers of character of received message " + receiveData.Length);
-             if (typeMessage != null) savePhrase.Add(typeMessage);
+             foreach (var word in typeMessage)
+             {
+                 typeMessage.Split(" ");
+             }
+            Console.WriteLine("Numbers of character of received message " + receiveData.Length);
+            savePhrase.Add(typeMessage);
          }
-         
+
          var bytes = System.Text.Encoding.UTF8.GetBytes(receiveData);
          await udpClient.SendAsync(bytes, bytes.Length);
          
