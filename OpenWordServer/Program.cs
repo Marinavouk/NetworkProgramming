@@ -1,42 +1,21 @@
-﻿using System.Net;
+﻿// See https://aka.ms/new-console-template for more information
+
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
+var client = new UdpClient(44446);
 
- using var udpClient = new UdpClient(1100);
- Console.WriteLine("Server set up at port 1100");
- Console.WriteLine("Server ready & awaiting to receive");
- 
- while (true)
- {
-     try
-     {
-         List<string> savePhrase = new List<string>();
-         
-         var remoteEp = new IPEndPoint(IPAddress.Any, 1100); 
-         var data = udpClient.Receive(ref remoteEp);
-         Console.WriteLine("Message received from " + remoteEp);
-         var receiveData = Encoding.UTF8.GetString(data);
+var sentence = string.Empty;
+while (true)
+{
+    IPEndPoint remoteEp = new IPEndPoint(IPAddress.Any, 0);
+    var bytes = client.Receive(ref remoteEp);
 
-         var typeMessage = Console.ReadLine();
-
-         if (typeMessage != null && receiveData.Length <= 20)
-         {
-             foreach (var word in typeMessage)
-             {
-                 typeMessage.Split(" ");
-             }
-            Console.WriteLine("Numbers of character of received message " + receiveData.Length);
-            savePhrase.Add(typeMessage);
-         }
-
-         var bytes = System.Text.Encoding.UTF8.GetBytes(receiveData);
-         await udpClient.SendAsync(bytes, bytes.Length);
-         
-     } catch (Exception ex)
-     {
-         Console.WriteLine($"Error: {ex.Message}");
-     }
-
-
- }
+    Console.WriteLine("Received bytes from: " + remoteEp);
+    var word = Encoding.UTF8.GetString(bytes);
+    Console.WriteLine("The word is: " + word);
+    sentence += " " + word.Trim();
+    bytes = Encoding.UTF8.GetBytes(sentence);
+    client.Send(bytes, bytes.Length, remoteEp);
+}
